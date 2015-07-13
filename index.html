@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+	<body ng-app="spotifyApp" ng-controller="mainCtrl">
+		<div class="container-fluid">
+			<div class="row">
+				<header>
+					<img class="header" src="img/spotify-logo.jpg" alt="spotify-logo">
+				</header>
+				<div id="side" class="col-md-4">
+					<p class="bold">
+						Search the spotify database by Artist, Album or Playlist. Click the names in the Search Results to go to a Spotify Page.
+					</p>
+					<div id="form-controls" class="form-group">
+						<span class="bold">Search For: </span>
+						<select ng-model="qType">
+							<option selected value="artist" >Artist</option>
+							<option value="album">Album</option>
+							<option value="playlist">Playlist</option>
+						</select>
+						<div ng-show="qType == 'artist'" class="form-group">
+							<label for="artist">Artist</label>
+							<input id="artist" class="form-control" type="text" ng-model="artist">
+							<input type="submit" ng-disabled="artist == null || artist == ''" class="btn btn-success" ng-click="getData(artist, 'artist')">
+						</div>
+						<div ng-show="qType == 'album'" class="form-group">
+							<label for="album">Album</label>
+							<input id="album" class="form-control" type="text" ng-model="album">
+							<input type="submit" ng-disabled="album == null || album == ''" class="btn btn-success" ng-click="getData(album, 'album')">
+						</div>
+						<div ng-show="qType == 'playlist'" class="form-group">
+							<label for="playlist">Playlist</label>
+							<input id="playlist" class="form-control" type="text" ng-model="playlist">
+							<input type="submit" ng-disabled="playlist == null || playlist  == ''" class="btn btn-success" ng-click="getData(playlist, 'playlist')">
+						</div>
+					</div>
+				</div>
+				<div id="content-area" class="col-md-8">
+					<div ng-if="qType == 'artist'">
+						<p ng-if="data.artists.items.length == 0">No Results found for artist "{{artist}}".</p>
+						<ol>
+							<li ng-repeat="item in data.artists.items">
+								<div><a href="{{item.external_urls.spotify}}" target="_blank">{{item.name}}</a></div>
+								<div ng-repeat="img in item.images">
+									<img ng-if="img.height <= 300 && img.height >200" src="{{img.url}}">
+								</div>
+							</li>
+						</ol>
+					</div>
+					<div ng-if="qType == 'album'">
+						<p ng-if="data.albums.items.length == 0">No Results found for album "{{album}}".</p>
+						<ol>
+							<li ng-repeat="item in data.albums.items">
+								<div><a href="{{item.external_urls.spotify}}" target="_blank">{{item.name}}</a></div>
+								<div ng-repeat="img in item.images">
+									<img ng-if="img.height == 300" src="{{img.url}}">
+								</div>
+							</li>
+						</ol>
+					</div>
+					<div ng-if="qType == 'playlist'">
+						<p ng-if="data.playlists.items.length == 0">No Results found for playlist "{{playlist}}".</p>
+						<ol>
+							<li ng-repeat="item in data.playlists.items">
+								<div><a href="{{item.external_urls.spotify}}" target="_blank">{{item.name}}</a></div>
+								<div ng-repeat="img in item.images">
+									<img ng-if="img.height == 300" src="{{img.url}}">
+								</div>
+							</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
